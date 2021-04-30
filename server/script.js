@@ -5,6 +5,7 @@ const authRoute = require('./routes/auth');
 const passport = require('passport');
 const local = require('./strategies/local');
 const store = new session.MemoryStore();
+const cors  = require('cors');
 
 const app = express();
 app.use(session({
@@ -14,6 +15,7 @@ app.use(session({
     store
 }));
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({
     extended:false
 }));
@@ -26,6 +28,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/users',usersRoute);
 app.use('/auth',authRoute);
+
 
 
 // const users = [{name:'Mohit',age:22}];
