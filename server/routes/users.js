@@ -1,5 +1,7 @@
 const {Router} = require('express');
 const db = require('../database');
+const bcrypt  = require('bcrypt');
+const saltRounds = 10;
 
 
 const router = Router();
@@ -28,9 +30,9 @@ router.post('/',async (req,res)=>{
         console.log(email);
         try{
             const temp = await db.promise().query(`SELECT userID FROM users ORDER BY userID DESC LIMIT 1`);
-            //const hash = await bcrypt.hash(password,10);
-            const newuserID = temp[0][0].userID+1
-            await db.promise().query(`INSERT INTO users values('${newuserID}','${username}','${password}','${email}')`);
+            const hash = await bcrypt.hash(password,saltRounds);
+            const newuserID = temp[0][0].userID+1;
+            await db.promise().query(`INSERT INTO users values('${newuserID}','${username}','${hash}','${email}')`);
             res.status(201).send({msg: 'Created User'});
         }catch(err){
             console.log(err);

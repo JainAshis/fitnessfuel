@@ -1,7 +1,7 @@
 const LocalStrategy = require('passport-local');
 const passport = require('passport');
 const db = require('../database');
-//const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 passport.serializeUser((user,done)=>{
     done(null,user.username);
@@ -26,15 +26,15 @@ passport.use(new LocalStrategy(
             if(result[0].length===0){
                 done(null,false);
             }else{
-                //const hashpass = result[0][0].password;
-                //console.log(hashpass);
-                //const validpass = await bcrypt.compare(password,hashpass);
-                if(password===result[0][0].password){
+                const hashpass = result[0][0].password;
+                console.log(hashpass);
+                const validpass = await bcrypt.compare(password,hashpass);
+                if(validpass){
                     console.log("success");
-                    done(null,result[0][0]);
+                    done(null,password);
                     
                 }else{
-                    
+                    console.log("failed!!")
                     done(null,false);
                 }
             }
